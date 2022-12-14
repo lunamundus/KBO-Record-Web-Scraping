@@ -27,6 +27,11 @@ elem.click()
 options = ['hitter', 'pitcher', 'defense', 'runner']
 record_tab_xpath = '//*[@id="contents"]/div[2]/div[2]/ul/*'
 
+# KBO 팀 목록
+# 두산(OB), 롯데, 삼성, 키움(우리), 한화, KIA(해태), KT, LG, NC, SK(SSG)
+teams = ['OB', 'LT', 'SS', 'WO', 'HH', 'HT', 'KT', 'NC', 'SK']
+
+
 for i in range(0, 4):
     # 현재 기록실 옵션 상태
     status = options[i]
