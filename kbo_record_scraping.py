@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import Select
 import time
 import pandas as pd
 
+# Web Driver
 options = webdriver.ChromeOptions()
 options.add_experimental_option("excludeSwitches", ["enable-logging"])
 driver = webdriver.Chrome("chrome_driver\chromedriver.exe", options=options)
@@ -31,7 +32,6 @@ record_tab_xpath = '//*[@id="contents"]/div[2]/div[2]/ul/*'
 # 두산(OB), 롯데, 삼성, 키움(우리), 한화, KIA(해태), KT, LG, NC, SK(SSG)
 teams = ['OB', 'LT', 'SS', 'WO', 'HH', 'HT', 'KT', 'NC', 'SK']
 
-
 for i in range(0, 4):
     # 현재 기록실 옵션 상태
     status = options[i]
@@ -42,23 +42,20 @@ for i in range(0, 4):
     
     time.sleep(3)
 
+    table_head = driver.find_element(By.CLASS_NAME, 'tData01').text.split('\n').pop(0).split(' ')
+    table_value = []
+
     # 팀 선택
-    select = Select(driver.find_element(By.NAME, "ctl00$ctl00$ctl00$cphContents$cphContents$cphContents$ddlTeam$ddlTeam"))
-    select.select_by_value(value='OB')
+    for team in teams:
+        select = Select(driver.find_element(By.NAME, "ctl00$ctl00$ctl00$cphContents$cphContents$cphContents$ddlTeam$ddlTeam"))
+        select.select_by_value(value=team)
 
-    time.sleep(3)
+        time.sleep(3)
 
-    # 데이터 가져오기 & 가공
-    table_value = driver.find_element(By.CLASS_NAME, 'tData01').text.split('\n')
-    table_head = table_value.pop(0).split(' ')
-
-    ## 페이지 이동 및 데이터 가져오기 & 가공
-    pages = driver.find_element(By.CLASS_NAME, 'paging').text.split(' ')
-    if len(pages) == 1:
-        pass
-    else:
-        for page in range(1, len(pages)):
-            id_selector = 'cphContents_cphContents_cphContents_ucPager_btnNo' + str(page+1)
+        ## 페이지 이동 및 데이터 가져오기 & 가공
+        pages = driver.find_element(By.CLASS_NAME, 'paging').text.split(' ')
+        if len(pages) == 1:
+            id_selector = 'cphContents_cphContents_cphContents_ucPager_btnNo' + str(pages[0])
             elem = driver.find_element(By.ID, id_selector)
             elem.click()
 
@@ -67,6 +64,17 @@ for i in range(0, 4):
             temp = driver.find_element(By.CLASS_NAME, 'tData01').text.split('\n')
             del temp[0]
             table_value.extend(temp)
+        else:
+            for page in range(1, len(pages)+1):
+                id_selector = 'cphContents_cphContents_cphContents_ucPager_btnNo' + str(page)
+                elem = driver.find_element(By.ID, id_selector)
+                elem.click()
+
+                time.sleep(3)
+
+                temp = driver.find_element(By.CLASS_NAME, 'tData01').text.split('\n')
+                del temp[0]
+                table_value.extend(temp)
 
     # 선수 기록 데이터 가공
     record_values = []
@@ -103,7 +111,7 @@ for i in range(0, 4):
     time.sleep(2)
 
 # 엑셀 파일로 저장
-with pd.ExcelWriter('test.xlsx') as writer:
+with pd.ExcelWriter('test_result/test3.xlsx') as writer:
     for status in options:
         globals()[f'{status}_dataframe'].to_excel(writer, sheet_name=status, index=False)
 

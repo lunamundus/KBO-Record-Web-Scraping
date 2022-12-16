@@ -2,5 +2,8 @@
 chrome_driver
 edge_driver
 
-# Save File
-/test.xlsx
+# Save File ignore
+test_result
+
+# README2.md version naming file ignore
+README2.md
