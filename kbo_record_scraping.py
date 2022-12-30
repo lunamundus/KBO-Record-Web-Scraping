@@ -33,7 +33,7 @@ record_tab_xpath = '//*[@id="contents"]/div[2]/div[2]/ul/*'
 
 # KBO 팀 목록
 # 두산(OB), 롯데, 삼성, 키움(우리), 한화, KIA(해태), KT, LG, NC, SK(SSG)
-teams = ['OB', 'LT', 'SS', 'WO', 'HH', 'HT', 'KT', 'NC', 'SK']
+teams = ['OB', 'LT', 'SS', 'WO', 'HH', 'HT', 'KT', 'LG', 'NC', 'SK']
 
 for i in range(0, 4):
     # 현재 기록실 옵션 상태
@@ -114,7 +114,7 @@ for i in range(0, 4):
     time.sleep(2)
 
 # 엑셀 파일로 저장
-with pd.ExcelWriter('test_result/test3.xlsx') as writer:
+with pd.ExcelWriter('result/kbo_players_record.xlsx') as writer:
     for status in options:
         globals()[f'{status}_dataframe'].to_excel(writer, sheet_name=status, index=False)
 
