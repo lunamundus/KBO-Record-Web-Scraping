@@ -6,6 +6,9 @@ from selenium.webdriver.support.ui import Select
 import time
 import pandas as pd
 
+# running time measurement
+start_time = time.time()
+
 # Web Driver
 options = webdriver.ChromeOptions()
 options.add_experimental_option("excludeSwitches", ["enable-logging"])
@@ -117,3 +120,6 @@ with pd.ExcelWriter('test_result/test3.xlsx') as writer:
 
 # 창 닫기
 driver.close()
+
+# running time printing
+print(f"Running time : {time.time() - start_time} seconds")
